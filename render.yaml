@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: nazrul-sishu-siksha-niketan-admission
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    healthCheckPath: /
+    disk:
+      name: admission-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USER
+        value: schooladmin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMISSION_DB
+        value: /var/data/admissions.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: ADMISSION_FEE_INR
+        value: "0"
